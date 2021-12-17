@@ -204,7 +204,6 @@ windows to numbers."
       (unless window-numbering-table
         (save-excursion
           (setq window-numbering-table (make-hash-table :size 16))
-          (window-numbering-install-mode-line)
           (add-hook 'minibuffer-setup-hook 'window-numbering-update)
           (add-hook 'window-configuration-change-hook
                     'window-numbering-update)
@@ -216,21 +215,6 @@ windows to numbers."
     (remove-hook 'window-configuration-change-hook
                  'window-numbering-update)
     (setq window-numbering-table nil)))
-
-(defun window-numbering-install-mode-line (&optional position)
-  "Install the window number from `window-numbering-mode' to the mode-line."
-  (let ((mode-line (default-value 'mode-line-format))
-        (res))
-    (dotimes (i (min (or position window-numbering-mode-line-position)
-                     (length mode-line)))
-      (push (car mode-line) res)
-      (pop mode-line))
-    (push '(:eval (window-numbering-get-number-string)) res)
-    (while mode-line
-      (push (car mode-line) res)
-      (pop mode-line))
-    (setq-default mode-line-format (nreverse res)))
-  (force-mode-line-update t))
 
 (defun window-numbering-clear-mode-line ()
   "Remove the window number of `window-numbering-mode' from the mode-line."
