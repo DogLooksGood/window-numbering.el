@@ -178,8 +178,9 @@ windows to numbers."
     (propertize s 'face 'window-numbering-face)))
 
 (defun window-numbering-get-number (&optional window)
-  (gethash (or window (selected-window))
-           (cdr (gethash (selected-frame) window-numbering-table))))
+  (let ((ht (cdr (gethash (selected-frame) window-numbering-table))))
+    (when (hash-table-p ht)
+      (gethash (or window (selected-window)) ht))))
 
 (defvar window-numbering-keymap
   (let ((map (make-sparse-keymap)))
